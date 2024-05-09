@@ -68,23 +68,30 @@ def parse_pdf_form(pdf_file, yaml_file):
     generate_yaml_config(database_name,username,password, yaml_file)
 
 # Function to extract form fields from text
+# Function to extract form fields from text
 def extract_form_fields(text):
-    # Define regex patterns for extracting form fields
-    database_pattern = r'Database:\s*(\w+)'
-    username_pattern = r'Username:\s*(\w+)'
-    password_pattern = r'Password:\s*(\w+)'
+    # Initialize variables
+    database_name = "Default Database Name"
+    username = "Default Username"
+    password = "Default Password"
 
-    # Extract database name
-    database_match = re.search(database_pattern, text)
-    database_name = database_match.group(1) if database_match else "Database"
+    # Split the text by lines
+    lines = text.split('\n')
 
-    # Extract username
-    username_match = re.search(username_pattern, text)
-    username = username_match.group(1) if username_match else "Username"
+    # Define keywords to search for
+    keywords = ['Database:', 'Username:', 'Password:']
 
-    # Extract password
-    password_match = re.search(password_pattern, text)
-    password = password_match.group(1) if password_match else "Password"
+    # Loop through each line and extract the fields
+    for line in lines:
+        for keyword in keywords:
+            if keyword in line:
+                value = line.split(keyword)[1].strip()
+                if keyword == 'Database:':
+                    database_name = value
+                elif keyword == 'Username:':
+                    username = value
+                elif keyword == 'Password:':
+                    password = value
 
     return database_name, username, password
 
